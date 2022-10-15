@@ -60,7 +60,7 @@ const App = () => {
     }
 
     const handleFinished = (inputValue) => {
-        if(quotes === inputValue){
+        if(quotes === inputValue || seconds === 60){
             setFinished(true)
             setStarted(false)
         }
