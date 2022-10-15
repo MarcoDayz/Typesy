@@ -1,0 +1,6 @@
+node_modules
+./node_modules
+./localPool.js
+localPool.js
+
+.DS_Store
