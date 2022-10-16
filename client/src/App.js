@@ -99,7 +99,7 @@ useEffect(()=> {
                 <NextButton handleNext={handleNext}/>
             </div>
             <div>
-                <WPMSpeed seconds={seconds} correctSymbols={correctSymbols}/>
+                <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
             </div>
         </div>
     )
