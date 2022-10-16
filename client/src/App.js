@@ -32,6 +32,7 @@ const App = () => {
                 setCorrectSymbols(0)
                 setStarted(false)
                 setFinished(false)
+                setIncomplete(false)
             } catch (error) {
                 console.log(error.message)
             } 
@@ -46,6 +47,7 @@ const App = () => {
         setCorrectSymbols(0)
         setStarted(false)
         setFinished(false)
+        setIncomplete(false)
     }
 
     const handleNext = () => {
