@@ -6,6 +6,7 @@ import RestartButton from "./components/RestartButton";
 import NextButton from "./components/NextButton";
 import WPMSpeed from "./components/WPMSpeed";
 import FailedScreen from "./components/FailedScreen";
+import PassedScreen from "./components/PassesScreen";
 
 const App = () => {
     const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
@@ -17,7 +18,8 @@ const App = () => {
     const [correctSymbols, setCorrectSymbols] = useState(0);
     const [started, setStarted] = useState(false);
     const [finished, setFinished] = useState(false);
-    const [incomplete, setIncomplete] = useState(false)
+    const [incomplete, setIncomplete] = useState(false);
+    const [passed, setPassed] = useState(false)
 
     useEffect(() => {
         document.title = "WPM App"
@@ -49,6 +51,7 @@ const App = () => {
         setStarted(false)
         setFinished(false)
         setIncomplete(false)
+        setPassed(false)
     }
 
     const handleNext = () => {
@@ -70,21 +73,23 @@ const App = () => {
         }
         if(quotes === inputValue && seconds <= 60 ){
             setFinished(true)
+            setPassed(true)
             setStarted(false)
+            
         }
     }
 
 
-useEffect(()=> {
-    if(started){   
-    const timer = setInterval(() => {
-           if(!finished && seconds <= 59){    
-                setSeconds(seconds+=1);        
-            }
-        }, 1000);                   
-        return ()=>clearInterval(timer)
-    }
-}, [started]);
+    useEffect(()=> {
+        if(started){   
+        const timer = setInterval(() => {
+            if(!finished && seconds <= 59){    
+                    setSeconds(seconds+=1);        
+                }
+            }, 1000);                   
+            return ()=>clearInterval(timer)
+        }
+    }, [started]);
 
 
     const correctSymbolsFunc = (inputValue) => {
@@ -98,9 +103,22 @@ useEffect(()=> {
                 <div className="FailedContainer">
                     <FailedScreen />                    
                 </div>
-                <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
-                <RestartButton handleRestart={handleRestart}/>
+                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
+                    <RestartButton handleRestart={handleRestart}/>
             </div>  
+        )
+    }else if(finished && passed){
+        return(
+            <div className="mainContainer">
+                <div className="PassedContainer">
+                    <PassedScreen />                  
+                </div>
+                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
+                <div>
+                    <RestartButton handleRestart={handleRestart}/>
+                    <NextButton handleNext={handleNext}/>  
+                </div>
+            </div> 
         )
     }else if(!loading){
         return (
