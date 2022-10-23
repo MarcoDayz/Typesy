@@ -8,7 +8,7 @@ import WPMSpeed from "./components/WPMSpeed";
 import FailedScreen from "./components/FailedScreen";
 
 const App = () => {
-    const getQuotesURL = 'http://localhost:4000/quotes';
+    const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
 
     const [loading, setLoading] = useState(true);
     const [quotes, setQuotes] = useState('');
