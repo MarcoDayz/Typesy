@@ -20,6 +20,7 @@ const App = () => {
     const [incomplete, setIncomplete] = useState(false)
 
     useEffect(() => {
+        document.title = "WPMapp"
         const getQuotes = async () => {
             try {
                 const {data} = await axios.get(getQuotesURL);
