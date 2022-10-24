@@ -1,9 +1,11 @@
 const FailedScreen = () => {
 
-    return <h1>Time ran out! 
-        <br/>
-        Try again!
-    </h1>
-}
+    return (
+        <h1>You finished with incorrect spelling.
+            <br/>
+            Please try again.
+        </h1>
+    )
+};
 
 export default FailedScreen;

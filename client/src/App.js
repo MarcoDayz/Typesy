@@ -5,8 +5,9 @@ import InputBox from "./components/InputBox";
 import RestartButton from "./components/RestartButton";
 import NextButton from "./components/NextButton";
 import WPMSpeed from "./components/WPMSpeed";
-import FailedScreen from "./components/FailedScreen";
+import IncompleteScreen from "./components/IncompleteScreen";
 import PassedScreen from "./components/PassesScreen";
+import FailedScreen from "./components/FailedScreen";
 import Loading from "./components/Loading";
 
 const App = () => {
@@ -20,7 +21,8 @@ const App = () => {
     const [started, setStarted] = useState(false);
     const [finished, setFinished] = useState(false);
     const [incomplete, setIncomplete] = useState(false);
-    const [passed, setPassed] = useState(false)
+    const [passed, setPassed] = useState(false);
+    const [failed, setFailed] = useState(false);
 
     useEffect(() => {
         document.title = "WPM App"
@@ -37,6 +39,7 @@ const App = () => {
                 setStarted(false)
                 setFinished(false)
                 setIncomplete(false)
+                setFailed(false)
             } catch (error) {
                 console.log(error.message)
             } 
@@ -53,11 +56,12 @@ const App = () => {
         setFinished(false)
         setIncomplete(false)
         setPassed(false)
-    }
+        setFailed(false)
+    };
 
     const handleNext = () => {
         setLoading(true)
-    }
+    };
 
     const handleInputOnChange = (e) => {
         setStarted(true)
@@ -65,20 +69,28 @@ const App = () => {
         setUserInput(inputValue)
         correctSymbolsFunc(inputValue)
         handleFinished(inputValue)
-    }
+    };
 
     const handleFinished = (inputValue) => {
+        //if run out of time
         if(quotes.length > inputValue.length && seconds === 60){
             setIncomplete(true)
             setFinished(true)
         }
+        //if finished everything correct under time
         if(quotes === inputValue && seconds <= 60 ){
             setFinished(true)
             setPassed(true)
             setStarted(false)
-            
         }
-    }
+        //if finished everything incorrectly and under time 
+        if(quotes.length === inputValue.length && quotes !== inputValue && seconds <= 60){
+            setFinished(true);
+            setPassed(false);
+            setStarted(false);
+            setFailed(true);
+        }
+    };
 
 
     useEffect(()=> {
@@ -98,11 +110,16 @@ const App = () => {
         const correctSymbol = inputValue.replace(' ', '').split('').filter((char,index) => char === text[index]).length;
         setCorrectSymbols(correctSymbol)
     };
+
+
     if(started && incomplete){
         return (
             <div className="mainContainer">
+                <div className="previewContainer">
+                    <Preview quotes={quotes} userInput={userInput}/>
+                </div>
                 <div className="FailedContainer">
-                    <FailedScreen />                    
+                    <IncompleteScreen />                    
                 </div>
                     <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
                     <RestartButton handleRestart={handleRestart}/>
@@ -111,7 +128,10 @@ const App = () => {
     }else if(finished && passed){
         return(
             <div className="mainContainer">
-                <div className="PassedContainer">
+                <div className="previewContainer">
+                    <Preview quotes={quotes} userInput={userInput}/>
+                </div>
+                <div className="Passed-Failed-Container">
                     <PassedScreen />                  
                 </div>
                     <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
@@ -121,6 +141,22 @@ const App = () => {
                 </div>
             </div> 
         )
+    }else if(finished && failed){
+        return(
+            <div className="mainContainer">
+                <div className="previewContainer">
+                    <Preview quotes={quotes} userInput={userInput}/>
+                </div>
+                <div className="Passed-Failed-Container">
+                    <FailedScreen />                  
+                </div>
+                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
+                <div>
+                    <RestartButton handleRestart={handleRestart}/>
+                </div>
+            </div> 
+        )
+
     }else if(!loading){
         return (
             <div className="mainContainer">
