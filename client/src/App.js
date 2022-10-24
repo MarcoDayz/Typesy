@@ -7,6 +7,7 @@ import NextButton from "./components/NextButton";
 import WPMSpeed from "./components/WPMSpeed";
 import FailedScreen from "./components/FailedScreen";
 import PassedScreen from "./components/PassesScreen";
+import Loading from "./components/Loading";
 
 const App = () => {
     const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
@@ -140,8 +141,8 @@ const App = () => {
         )
     }else{
         return (
-            <div>
-                <h1>Loading...</h1>
+            <div className="Loading">
+                <Loading />
             </div>
         )
     }
