@@ -118,7 +118,7 @@ const App = () => {
                 <div className="previewContainer">
                     <Preview quotes={quotes} userInput={userInput}/>
                 </div>
-                <div className="FailedContainer">
+                <div className="Passed-Failed-Container">
                     <IncompleteScreen />                    
                 </div>
                     <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
