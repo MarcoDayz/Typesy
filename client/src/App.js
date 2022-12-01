@@ -11,13 +11,13 @@ import FailedScreen from "./components/FailedScreen";
 import Loading from "./components/Loading";
 
 const App = () => {
-    const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
-
     const [loading, setLoading] = useState(true);
     const [quotes, setQuotes] = useState('');
     const [userInput, setUserInput] = useState('');
     let [seconds, setSeconds] = useState(0);
     const [correctSymbols, setCorrectSymbols] = useState(0);
+    const [WPMnum, setWPMnum] = useState(0);
+    const [WordsCount, setWordsCount] = useState(0)
     const [started, setStarted] = useState(false);
     const [finished, setFinished] = useState(false);
     const [incomplete, setIncomplete] = useState(false);
@@ -25,7 +25,9 @@ const App = () => {
     const [failed, setFailed] = useState(false);
 
     useEffect(() => {
-        document.title = "WPM App"
+        const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
+        // const getQuotesURL = 'http://localhost:4000/quotes';
+
         const getQuotes = async () => {
             try {
                 const {data} = await axios.get(getQuotesURL);
@@ -47,6 +49,31 @@ const App = () => {
        getQuotes()
     }, [loading]);
 
+    useEffect(()=> {
+        if(started){   
+        const timer = setInterval(() => {
+            if(!finished && seconds <= 59){ 
+                    setSeconds(seconds += 1);
+                }
+            }, 1000);                   
+            return ()=>clearInterval(timer)
+        }
+    }, [started]);
+
+    useEffect(()=> {
+        const calculateWPM = () => {
+            const wpm = (correctSymbols/5) / (seconds/60)
+            setWPMnum(Math.floor(wpm)) 
+            
+            if(seconds === 60){
+                setIncomplete(true)
+                setFinished(true)
+            } 
+           
+        };
+        calculateWPM()
+    },[seconds])
+
     const handleRestart = () => {
         setFinished(true)
         setUserInput("")
@@ -64,16 +91,17 @@ const App = () => {
     };
 
     const handleInputOnChange = (e) => {
-        setStarted(true)
         const inputValue = e.target.value
+        setStarted(true)
         setUserInput(inputValue)
         correctSymbolsFunc(inputValue)
         handleFinished(inputValue)
+        countCorrectWords(inputValue)
     };
 
     const handleFinished = (inputValue) => {
         //if run out of time
-        if(quotes.length > inputValue.length && seconds === 60){
+        if(seconds === 60){
             setIncomplete(true)
             setFinished(true)
         }
@@ -92,24 +120,20 @@ const App = () => {
         }
     };
 
-
-    useEffect(()=> {
-        if(started){   
-        const timer = setInterval(() => {
-            if(!finished && seconds <= 59){    
-                    setSeconds(seconds+=1);        
-                }
-            }, 1000);                   
-            return ()=>clearInterval(timer)
-        }
-    }, [started]);
-
-
     const correctSymbolsFunc = (inputValue) => {
-        const text = quotes.replace(' ','');
-        const correctSymbol = inputValue.replace(' ', '').split('').filter((char,index) => char === text[index]).length;
-        setCorrectSymbols(correctSymbol)
+        const text = quotes.replaceAll(' ','');
+        const correctSymbol = inputValue.replaceAll(' ', '').split('').filter((char,index) => char === text[index]).length;
+        setCorrectSymbols(correctSymbol);
     };
+
+    const countCorrectWords = (inputValue) => {
+        const text = quotes.split(' ');
+        const wordNum = inputValue.split(' ').filter((word,index) => word === text[index]).length;
+        setWordsCount(wordNum);
+    }
+
+
+    
 
 
     if(started && incomplete){
@@ -121,7 +145,7 @@ const App = () => {
                 <div className="Passed-Failed-Container">
                     <IncompleteScreen />                    
                 </div>
-                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
+                <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} WordsCount={WordsCount} WPMnum={WPMnum}/>
                     <RestartButton handleRestart={handleRestart}/>
             </div>  
         )
@@ -134,7 +158,7 @@ const App = () => {
                 <div className="Passed-Failed-Container">
                     <PassedScreen />                  
                 </div>
-                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
+                <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} WordsCount={WordsCount} WPMnum={WPMnum}/>
                 <div>
                     <RestartButton handleRestart={handleRestart}/>
                     <NextButton handleNext={handleNext}/>  
@@ -150,7 +174,7 @@ const App = () => {
                 <div className="Passed-Failed-Container">
                     <FailedScreen />                  
                 </div>
-                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
+                <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} WordsCount={WordsCount} WPMnum={WPMnum}/>
                 <div>
                     <RestartButton handleRestart={handleRestart}/>
                 </div>
@@ -171,7 +195,7 @@ const App = () => {
                     <NextButton handleNext={handleNext}/>
                 </div>
                 <div>
-                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} userInput={userInput}/>
+                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} WordsCount={WordsCount} WPMnum={WPMnum}/>
                 </div>
             </div>
         )
