@@ -27,7 +27,7 @@ const App = () => {
 
     useEffect(() => {
         
-        const getQuotesURL = 'https://typesy-api.onrender.com//quotes';
+        const getQuotesURL = 'https://typesy-api.onrender.com/quotes';
         // const getQuotesURL = 'http://localhost:4000/quotes';
         
         const getQuotes = async () => {
