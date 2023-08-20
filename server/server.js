@@ -8,7 +8,17 @@ const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+// app.use(express.static('public'));
+
+app.get('/', async (req, res) => {
+    try {
+        res.contentType('application/json').status(200)
+        res.send(true)
+    } catch (error) {
+        console.log(error.message)
+        res.send(false)
+    }
+});
 
 app.get('/quotes', async (req, res) => {
     try {
