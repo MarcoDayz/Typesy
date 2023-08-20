@@ -1,9 +1,6 @@
 const IncompleteScreen = () => {
 
-    return <h1>Time ran out! 
-        <br/>
-        Try again!
-    </h1>
+    return <h1>Time ran out</h1>
 }
 
 export default IncompleteScreen;

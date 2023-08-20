@@ -12,6 +12,7 @@ import Loading from "./components/Loading";
 
 const App = () => {
     const [loading, setLoading] = useState(true);
+    const [isAwake, setIsAwake] = useState(false);
     const [quotes, setQuotes] = useState('');
     const [userInput, setUserInput] = useState('');
     let [seconds, setSeconds] = useState(0);
@@ -25,16 +26,29 @@ const App = () => {
     const [failed, setFailed] = useState(false);
 
     useEffect(() => {
-        const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
-        // const getQuotesURL = 'http://localhost:4000/quotes';
-
+        
+        // const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
+        const getQuotesURL = 'http://localhost:4000/quotes';
+        
         const getQuotes = async () => {
+ 
+            const wakeUp = async () => {
+                const {data} = await axios.get("http://localhost:4000/");
+                // console.log(data)
+                setIsAwake(data);
+            }
+            wakeUp();
+
             try {
                 const {data} = await axios.get(getQuotesURL);
                 const datalength = data.length
                 const randomNum = Math.floor(Math.random() * datalength)
-                setQuotes(data[randomNum].quote.toLowerCase())
-                setLoading(false)
+                const cleanedQuote = cleanQuote (data[randomNum].quote);
+                setQuotes(cleanedQuote.toLowerCase())
+                //illusion of fetching time
+                setTimeout(() => {
+                    setLoading(false)
+                }, Math.floor(Math.random() * 1000));
                 setUserInput("")
                 setSeconds(0)
                 setCorrectSymbols(0)
@@ -46,7 +60,7 @@ const App = () => {
                 console.log(error.message)
             } 
         }
-       getQuotes()
+        getQuotes()
     }, [loading]);
 
     useEffect(()=> {
@@ -63,7 +77,7 @@ const App = () => {
     useEffect(()=> {
         const calculateWPM = () => {
             const wpm = (correctSymbols/5) / (seconds/60)
-            setWPMnum(Math.floor(wpm)) 
+            setWPMnum(Number.isNaN(Math.floor(wpm))? 0 : Math.floor(wpm)) 
             
             if(seconds === 60){
                 setIncomplete(true)
@@ -73,6 +87,12 @@ const App = () => {
         };
         calculateWPM()
     },[seconds])
+
+    const cleanQuote = (s) => {
+        var regex = /[0-9?!@#$%^&*)(+=,'"._-]/g
+        const cleanStr = s.replaceAll(regex, '');
+        return cleanStr;
+    }
 
     const handleRestart = () => {
         setFinished(true)
@@ -133,12 +153,10 @@ const App = () => {
     }
 
 
-    
-
-
     if(started && incomplete){
         return (
             <div className="mainContainer">
+                <h1 className="head">Typesy</h1>
                 <div className="previewContainer">
                     <Preview quotes={quotes} userInput={userInput}/>
                 </div>
@@ -152,6 +170,7 @@ const App = () => {
     }else if(finished && passed){
         return(
             <div className="mainContainer">
+                <h1 className="head">Typesy</h1>
                 <div className="previewContainer">
                     <Preview quotes={quotes} userInput={userInput}/>
                 </div>
@@ -168,6 +187,7 @@ const App = () => {
     }else if(finished && failed){
         return(
             <div className="mainContainer">
+                <h1 className="head">Typesy</h1>
                 <div className="previewContainer">
                     <Preview quotes={quotes} userInput={userInput}/>
                 </div>
@@ -184,25 +204,23 @@ const App = () => {
     }else if(!loading){
         return (
             <div className="mainContainer">
+                <h1 className="head">Typesy</h1>
                 <div className="previewContainer">
                     <Preview quotes={quotes} userInput={userInput}/>
                 </div>
-                <div>
-                    <InputBox userInput={userInput} handleInputOnChange={handleInputOnChange} finished={finished}/>                
-                </div>
+                <InputBox userInput={userInput} handleInputOnChange={handleInputOnChange} finished={finished}/>                
+                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} WordsCount={WordsCount} WPMnum={WPMnum}/>
                 <div>
                     <RestartButton handleRestart={handleRestart}/>
                     <NextButton handleNext={handleNext}/>
                 </div>
-                <div>
-                    <WPMSpeed seconds={seconds} correctSymbols={correctSymbols} WordsCount={WordsCount} WPMnum={WPMnum}/>
-                </div>
+
             </div>
         )
     }else{
         return (
-            <div className="Loading">
-                <Loading />
+            <div>
+                <Loading isAwake={isAwake}/>
             </div>
         )
     }

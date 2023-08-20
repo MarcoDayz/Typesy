@@ -1,7 +1,23 @@
-const Loading = () => {
+const Loading = ({isAwake}) => {
 
     return (
-        <h1>Loading...</h1>
+        <div className="loading-wrapper">
+            <h1 className="head">Typesy</h1>
+            <div className="Loading">
+                {isAwake? null : <h1>Loading App</h1>}
+                <div className="lds-roller">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                {isAwake? null : <p className="load-msg">Waking server please wait approximately 15 min.</p>}
+            </div>
+        </div>
     )
 }
 

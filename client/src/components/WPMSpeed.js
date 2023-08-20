@@ -1,6 +1,6 @@
 const WPMSpeed = ({seconds, correctSymbols, WordsCount, WPMnum}) => {
 
-    if(seconds !== 0){
+    // if(seconds !== 0){
     // const wpm = (correctSymbols/5) / (seconds/60)
         return (
         <div className="WPM-container">
@@ -10,9 +10,9 @@ const WPMSpeed = ({seconds, correctSymbols, WordsCount, WPMnum}) => {
             <div>Correct Words: {WordsCount} </div>
         </div>
         )
-    }
+    // }
 
-    return null;
+    // return null;
 }
 
 export default WPMSpeed;

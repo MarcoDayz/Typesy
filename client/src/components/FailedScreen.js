@@ -1,10 +1,7 @@
 const FailedScreen = () => {
 
     return (
-        <h1>You finished with incorrect spelling.
-            <br/>
-            Please try again.
-        </h1>
+        <h1>Results</h1>
     )
 };
 

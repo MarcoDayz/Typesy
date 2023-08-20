@@ -1,7 +1,7 @@
 const PassedScreen = () => {
 
     return (
-        <h1>Congratulations, You passed!!!</h1>
+        <h1>Well Done!!!</h1>
     )
 };
 
