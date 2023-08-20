@@ -27,13 +27,13 @@ const App = () => {
 
     useEffect(() => {
         
-        // const getQuotesURL = 'https://wordsperminute.onrender.com/quotes';
-        const getQuotesURL = 'http://localhost:4000/quotes';
+        const getQuotesURL = 'https://typesy-api.onrender.com//quotes';
+        // const getQuotesURL = 'http://localhost:4000/quotes';
         
         const getQuotes = async () => {
  
             const wakeUp = async () => {
-                const {data} = await axios.get("http://localhost:4000/");
+                const {data} = await axios.get('https://typesy-api.onrender.com/');
                 // console.log(data)
                 setIsAwake(data);
             }
